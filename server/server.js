@@ -1,10 +1,34 @@
+// Imports
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
+const userRouter = require('./routes/user');
+require('dotenv').config();
+// Imports End
 
-app.get('/api', (req, res) => {
+// Express Initialization
+const app = express();
+// Express Initialization End
+
+// Middleware Initialization
+app.use(express.json());
+app.use('/user', userRouter);
+app.use('body-parser');
+// Middleware Initialization End
+
+// Mongoose Initialization
+mongoose.connect(process.env.DATABASE_URL, {
+    useNewUrlParser: true,
+});
+mongoose.set('strictQuery', true);
+const db = mongoose.connection;
+db.on('error', (error) => {
+    console.error(error);
+});
+db.once('open', () => console.log('Connected'));
+// Mongoose Initialization End
+
+// Requests
+app.get('/test', (req, res) => {
     res.json({ Hello: ['World'] });
 });
-
-app.listen(8000, () => {
-    console.log('Listening on port 8000');
-});
+// Requests End
