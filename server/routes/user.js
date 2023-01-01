@@ -2,7 +2,7 @@
 const { response } = require('express');
 const express = require('express');
 const router = express.Router();
-const user = require('../models user');
+const user = require('../models/userModel');
 
 // Getting All Users
 router.get('/', async (req, res) => {
@@ -59,9 +59,5 @@ router.delete('/:id', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
-
-// router.post();
-
-// Register
 
 module.exports = router;
