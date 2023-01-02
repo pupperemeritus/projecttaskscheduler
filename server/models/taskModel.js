@@ -13,18 +13,18 @@ const taskSchema = new mongoose.Schema({
         required: false,
     },
 
-    groupId: {
-        type: ObjectId,
+    groupName: {
+        type: String,
         required: false,
     },
 
     assignee: {
-        type: ObjectId,
+        type: String,
         required: true,
     },
 
     assignor: {
-        type: ObjectId,
+        type: String,
         required: true,
     },
 

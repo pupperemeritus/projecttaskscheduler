@@ -2,12 +2,12 @@
 const { response } = require('express');
 const express = require('express');
 const router = express.Router();
-const user = require('../models/userModel');
+const User = require('../models/userModel');
 
 // Getting All Users
 router.get('/', async (req, res) => {
     try {
-        const users = await user.find();
+        const users = await User.find();
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -15,12 +15,17 @@ router.get('/', async (req, res) => {
 
 // Getting One User
 router.get('/:id', async (req, res) => {
-    const getUser = await user.findById({ _id: id });
+    try {
+        const getUser = await User.findById({ _id: id });
+        res.status(201).json(getUser);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
 });
 
 // Creating One User
 router.post('/', async (req, res) => {
-    const user = new user({
+    const user = new User({
         name: req.body.name,
         accountCreationDate: Date.now(),
         accountModificationDate: Date.now(),
@@ -36,16 +41,18 @@ router.post('/', async (req, res) => {
 
 // Updating One User
 router.patch('/:id', async (req, res) => {
-    const updatedUser = await user.where({ _id: id }).update({
-        $set: {
-            name: req.body.name,
-            email: req.body.email,
-            accountModificationDate: Date.now(),
-        },
-    });
+    const updatedUser = await User.find()
+        .where({ _id: id })
+        .update({
+            $set: {
+                name: req.body.name,
+                email: req.body.email,
+                accountModificationDate: Date.now(),
+            },
+        });
     try {
-        const upd = await user.save();
-        res.status(201).json(updatedUser);
+        const upd = await updatedUser.save();
+        res.status(201).json(upd);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -54,7 +61,8 @@ router.patch('/:id', async (req, res) => {
 // Deleting One User
 router.delete('/:id', async (req, res) => {
     try {
-        await user.deleteOne({ _id: id });
+        await User.deleteOne({ _id: id });
+        res.status(200);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }

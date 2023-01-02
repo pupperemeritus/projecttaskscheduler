@@ -2,12 +2,13 @@
 const { response } = require('express');
 const express = require('express');
 const router = express.Router();
-const task = require('../models/taskModel');
+const Task = require('../models/taskModel');
+const Group = require('../models/groupModel');
 
 // Getting All Tasks
 router.get('/', async (req, res) => {
     try {
-        const tasks = await task.find();
+        const tasks = await Task.find();
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -15,54 +16,64 @@ router.get('/', async (req, res) => {
 
 // Getting One Task
 router.get('/:id', async (req, res) => {
-    const getGroup = await task.findById({ _id: id });
+    try {
+        const getTask = await Task.findById({ _id: id });
+        req.status(201).json(getTask);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
 });
 
 // Creating One Task
 router.post('/', async (req, res) => {
-    const Task = new task({
+    if (req.body.groupName != null) {
+        try {
+            await Task.find({ groupName: req.body.groupName });
+        } catch (err) {
+            res.status(500).json({ message: err.message + 'Group Not Found' });
+        }
+    }
+    const Task = new Task({
         title: req.body.title,
         taskCreationDate: Date.now(),
         taskModificationDate: Date.now(),
-   // Assignor:  Find id by emails given as input in frontend
-        async function gettask(req,res,next)=>{
-        let tasks
-         try{
-             Task = await task.findById(req.email.id)
-             if(task == null){
-                 return.res.status(404).json({message:'Cannot find task'})
-             }
-         }catch (err){
-             return res.status(500).json({{message: 'err.message'})
-             next()
-         }
-        res.Task=task
-        
-             
-        
-        // Assignee: Find id by emails given as input in frontend,
-        // groupId: find id by group name,
+        taskDescription: req.body.taskDescription,
+        groupName: req.body.groupName,
+        taskEndingDate: req.body.taskEndingDate,
+        assignor: req.body.assignor,
+        assignee: req.body.assignee,
     });
     try {
-        const newTask = await task.save();
+        const newTask = await Task.save();
         res.status(201).json(newTask);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 });
 
-// Updating One Group
+// Updating One Task
 router.patch('/:id', async (req, res) => {
-    const updatedGroup = await task.where({ _id: id }).update({
-        $set: {
-            groupName: req.body.name,
-            //set emails in group
-            groupModificationDate: Date.now(),
-        },
-    });
     try {
-        const upd = await task.save();
-        res.status(201).json(updatedGroup);
+        await Task.find({ groupName: req.body.groupName });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+    const updatedTask = await Task.find()
+        .where({ _id: id })
+        .update({
+            $set: {
+                groupName: req.body.groupName,
+                title: req.body.title,
+                taskDescription: req.body.taskDescription,
+                taskModificationDate: Date.now(),
+                assignor: req.body.assignor,
+                assignee: req.body.assignee,
+                taskEndingDate: req.body.taskEndingDate,
+            },
+        });
+    try {
+        const upd = await updatedTask.save();
+        res.status(201).json(upd);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -71,7 +82,8 @@ router.patch('/:id', async (req, res) => {
 // Deleting One User
 router.delete('/:id', async (req, res) => {
     try {
-        await task.deleteOne({ _id: id });
+        await Task.deleteOne({ _id: id });
+        res.status(200);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }

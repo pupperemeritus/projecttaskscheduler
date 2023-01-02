@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 
 // Creating schemas
 const groupSchema = new mongoose.Schema({
-    ids: {
-        type: [ObjectId],
+    emails: {
+        type: [String],
         required: true,
     },
 

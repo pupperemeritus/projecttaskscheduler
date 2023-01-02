@@ -1,13 +1,14 @@
 // Importing
 const { response } = require('express');
 const express = require('express');
+const { createScanner } = require('typescript');
 const router = express.Router();
-const group = require('../models/groupModel');
+const Group = require('../models/groupModel');
 
 // Getting All Groups
 router.get('/', async (req, res) => {
     try {
-        const groups = await group.find();
+        const groups = await Group.find();
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -15,7 +16,12 @@ router.get('/', async (req, res) => {
 
 // Getting One Group
 router.get('/:id', async (req, res) => {
-    const getGroup = await group.findById({ _id: id });
+    try {
+        const getGroup = await Group.findById({ _id: id });
+        res.status(201).json(getGroup);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
 });
 
 // Creating One Group
@@ -24,7 +30,7 @@ router.post('/', async (req, res) => {
         groupName: req.body.groupName,
         groupCreationDate: Date.now(),
         groupModificationDate: Date.now(),
-        // Find by emails given as input in frontend,
+        emails: req.body.emails.split(','),
     });
     try {
         const newGroup = await group.save();
@@ -36,16 +42,18 @@ router.post('/', async (req, res) => {
 
 // Updating One Group
 router.patch('/:id', async (req, res) => {
-    const updatedGroup = await group.where({ _id: id }).update({
-        $set: {
-            groupName: req.body.groupName,
-            //set emails in group
-            groupModificationDate: Date.now(),
-        },
-    });
+    const updatedGroup = await Group.find()
+        .where({ _id: id })
+        .update({
+            $set: {
+                groupName: req.body.groupName,
+                emails: req.body.emails.split(','),
+                groupModificationDate: Date.now(),
+            },
+        });
     try {
-        const upd = await group.save();
-        res.status(201).json(updatedGroup);
+        const upd = await updatedGroup.save();
+        res.status(201).json(upd);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -54,7 +62,8 @@ router.patch('/:id', async (req, res) => {
 // Deleting One User
 router.delete('/:id', async (req, res) => {
     try {
-        await group.deleteOne({ _id: id });
+        await Group.deleteOne({ _id: id });
+        res.status(200);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
