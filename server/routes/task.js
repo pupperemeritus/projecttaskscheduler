@@ -24,7 +24,22 @@ router.post('/', async (req, res) => {
         title: req.body.title,
         taskCreationDate: Date.now(),
         taskModificationDate: Date.now(),
-        // Assignor:  Find id by emails given as input in frontend,
+   // Assignor:  Find id by emails given as input in frontend
+        async function gettask(req,res,next)=>{
+        let tasks
+         try{
+             Task = await task.findById(req.email.id)
+             if(task == null){
+                 return.res.status(404).json({message:'Cannot find task'})
+             }
+         }catch (err){
+             return res.status(500).json({{message: 'err.message'})
+             next()
+         }
+        res.Task=task
+        
+             
+        
         // Assignee: Find id by emails given as input in frontend,
         // groupId: find id by group name,
     });
