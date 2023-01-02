@@ -4,9 +4,10 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/taskModel');
 const Group = require('../models/groupModel');
+const verifyJWT = require('../models/verifyJWT');
 
 // Getting All Tasks
-router.get('/', async (req, res) => {
+router.get('/', verifyJWT, async (req, res) => {
     try {
         const tasks = await Task.find();
     } catch (err) {
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // Getting One Task
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyJWT, async (req, res) => {
     try {
         const getTask = await Task.findById({ _id: id });
         req.status(201).json(getTask);
@@ -25,7 +26,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Creating One Task
-router.post('/', async (req, res) => {
+router.post('/', verifyJWT, async (req, res) => {
     if (req.body.groupName != null) {
         try {
             await Task.find({ groupName: req.body.groupName });
@@ -52,7 +53,7 @@ router.post('/', async (req, res) => {
 });
 
 // Updating One Task
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', verifyJWT, async (req, res) => {
     try {
         await Task.find({ groupName: req.body.groupName });
     } catch (err) {
@@ -80,7 +81,7 @@ router.patch('/:id', async (req, res) => {
 });
 
 // Deleting One User
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyJWT, async (req, res) => {
     try {
         await Task.deleteOne({ _id: id });
         res.status(200);

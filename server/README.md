@@ -39,7 +39,17 @@
 `POST http://localhost:8000/login`
 
 -   Inputs
-    -
+    -   username
+    -   password
+
+## Register
+
+`POST http://localhost:8000/register`
+
+-   Inputs
+    -   username
+    -   email
+    -   password
 
 ## Task
 

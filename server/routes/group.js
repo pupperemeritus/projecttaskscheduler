@@ -4,9 +4,10 @@ const express = require('express');
 const { createScanner } = require('typescript');
 const router = express.Router();
 const Group = require('../models/groupModel');
+const verifyJWT = require('../models/verifyJWT');
 
 // Getting All Groups
-router.get('/', async (req, res) => {
+router.get('/', verifyJWT, async (req, res) => {
     try {
         const groups = await Group.find();
     } catch (err) {
@@ -25,7 +26,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Creating One Group
-router.post('/', async (req, res) => {
+router.post('/', verifyJWT, async (req, res) => {
     const group = new group({
         groupName: req.body.groupName,
         groupCreationDate: Date.now(),
@@ -41,7 +42,7 @@ router.post('/', async (req, res) => {
 });
 
 // Updating One Group
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', verifyJWT, async (req, res) => {
     const updatedGroup = await Group.find()
         .where({ _id: id })
         .update({
@@ -60,7 +61,7 @@ router.patch('/:id', async (req, res) => {
 });
 
 // Deleting One User
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyJWT, async (req, res) => {
     try {
         await Group.deleteOne({ _id: id });
         res.status(200);
