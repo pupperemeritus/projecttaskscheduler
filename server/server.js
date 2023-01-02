@@ -1,7 +1,13 @@
 // Imports
 const express = require('express');
 const mongoose = require('mongoose');
+
 const userRouter = require('./routes/user');
+const groupRouter = require('./routes/group');
+const taskRouter = require('./routes/task');
+const registerRouter = require('./routes/register');
+const loginRouter = require('./routes/login');
+
 require('dotenv').config();
 // Imports End
 
@@ -12,7 +18,12 @@ const app = express();
 // Middleware Initialization
 app.use(express.json());
 app.use('/user', userRouter);
+app.use('/group', groupRouter);
+app.use('/task', taskRouter);
+app.use('/register', registerRouter);
 app.use('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // Middleware Initialization End
 
 // Mongoose Initialization

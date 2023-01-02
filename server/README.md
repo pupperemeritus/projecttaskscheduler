@@ -34,39 +34,12 @@
 
 ### `ones with :id have group id as parameter`
 
-## User
+## Login
 
--   GET `http://localhost:8000/user/`
+`POST http://localhost:8000/login`
 
-    -   Getting All Users
-
--   POST `http://localhost:8000/user/`
-
-    -   Creating One User
-    -   Inputs :
-        -   name
-        -   email
-    -   Returns :
-        -   User Object Created in Database
-
--   GET `http://localhost:8000/user/:id/`
-
-    -   Getting One User
-
--   PATCH `http://localhost:8000/user/:id/`
-
-    -   Editing One User
-    -   Inputs(remember to fetch and put in state before calling this) :
-        -   name
-        -   email
-    -   Returns :
-        -   Edited Object Stored in Database
-
--   DELETE `http://localhost:8000/user/:id/`
-
-    -   Deleting One User
-
-### `ones with :id have user id as parameter`
+-   Inputs
+    -
 
 ## Task
 
