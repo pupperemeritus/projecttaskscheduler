@@ -19,7 +19,7 @@ function App() {
             element={<Login />}
         />
         <Route
-            path='/tasks'
+            path='/task'
             element={<Tasks />}
         />
         <Route
@@ -27,7 +27,7 @@ function App() {
             element={<User />}
         />
         <Route
-            path='/groups'
+            path='/group'
             element={<Group />}
         />
         <Route
