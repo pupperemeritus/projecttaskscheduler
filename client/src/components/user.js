@@ -76,3 +76,4 @@ const UserForm = () => {
         </form>
     );
 };
+export default UserForm;
