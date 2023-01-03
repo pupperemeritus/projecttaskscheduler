@@ -4,7 +4,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { Nav, Navbar } from 'react-bootstrap';
 
-const HomePage = () => {
+const Home = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // Check if the user is authenticated when the component mounts
@@ -75,4 +75,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default Home;

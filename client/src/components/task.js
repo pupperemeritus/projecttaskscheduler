@@ -3,7 +3,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { Table, Form, Button } from 'react-bootstrap';
 
-const TaskList = () => {
+const Task = () => {
     const [tasks, setTasks] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -29,7 +29,7 @@ const TaskList = () => {
             const fetchTaskInfo = async () => {
                 try {
                     const taskId = window.location.pathname.split('/')[2];
-                    const { data } = await axios.get(`/api/tasks/${taskId}`);
+                    const { data } = await axios.get(`/task/${taskId}`);
                     setTitle(data.title);
                     setDescription(data.description);
                 } catch (error) {
@@ -47,7 +47,7 @@ const TaskList = () => {
             const { userId } = jwt.verify(token, process.env.JWT_SECRET);
             if (isEditing) {
                 const taskId = window.location.pathname.split('/')[2];
-                await axios.patch(`/api/tasks/${taskId}`, {
+                await axios.patch(`/task/${taskId}`, {
                     title,
                     description,
                     userId,
@@ -64,7 +64,7 @@ const TaskList = () => {
 
     const deleteTask = async (taskId) => {
         try {
-            await axios.delete(`/api/tasks/${taskId}`);
+            await axios.delete(`/task/${taskId}`);
             console.log('Task deleted successfully!');
             // Fetch the updated list of tasks
             const token = localStorage.getItem('jwt');
@@ -75,4 +75,4 @@ const TaskList = () => {
     };
 };
 
-export default TaskList;
+export default Task;

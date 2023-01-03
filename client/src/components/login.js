@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 
-const LoginPage = () => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,7 +28,7 @@ const LoginPage = () => {
     };
 
     if (isLoggedIn) {
-        return <Redirect to='/' />;
+        return <Navigate to='/' />;
     }
 
     return (
@@ -60,4 +60,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Login;

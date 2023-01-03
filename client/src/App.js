@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Route, Routes } from 'react-router-dom';
+import Group from './components/group';
+import Home from './components/home';
+import Task from './components/task';
+import User from './components/user';
+import Login from './components/login';
+import Register from './components/register';
 function App() {
     // const [backendData, setBackendData] = useState(0);
     // useEffect(() => {
@@ -20,7 +27,7 @@ function App() {
         />
         <Route
             path='/task'
-            element={<Tasks />}
+            element={<Task />}
         />
         <Route
             path='/user'
