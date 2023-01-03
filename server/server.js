@@ -21,6 +21,7 @@ app.use('/user', userRouter);
 app.use('/group', groupRouter);
 app.use('/task', taskRouter);
 app.use('/register', registerRouter);
+app.use('/login', loginRouter);
 app.use('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

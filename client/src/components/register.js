@@ -26,42 +26,42 @@ const RegisterPage = () => {
     if (isRegistered) {
         return <Redirect to='/login' />;
     }
-
-    return (
-        <Form onSubmit={handleSubmit}>
-            <Form.Group controlId='formBasicName'>
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                    type='text'
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                />
-            </Form.Group>
-            <Form.Group controlId='formBasicEmail'>
-                <Form.Label>Email address</Form.Label>
-                <Form.Control
-                    type='email'
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                />
-            </Form.Group>
-            <Form.Group controlId='formBasicPassword'>
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                    type='password'
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                />
-            </Form.Group>
-            {error && <p className='text-danger'>{error}</p>}
-            <Button
-                variant='primary'
-                type='submit'
-            >
-                Register
-            </Button>
-        </Form>
-    );
 };
+
+return (
+    <Form onSubmit={handleSubmit}>
+        <Form.Group controlId='formBasicName'>
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+                type='text'
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+            />
+        </Form.Group>
+        <Form.Group controlId='formBasicEmail'>
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+                type='email'
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+            />
+        </Form.Group>
+        <Form.Group controlId='formBasicPassword'>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+                type='password'
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+            />
+        </Form.Group>
+        {error && <p className='text-danger'>{error}</p>}
+        <Button
+            variant='primary'
+            type='submit'
+        >
+            Register
+        </Button>
+    </Form>
+);
 
 export default RegisterPage;

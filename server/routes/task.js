@@ -29,7 +29,7 @@ router.get('/:id', verifyJWT, async (req, res) => {
 router.post('/', verifyJWT, async (req, res) => {
     if (req.body.groupName != null) {
         try {
-            await Task.find({ groupName: req.body.groupName });
+            await Group.find({ groupName: req.body.groupName });
         } catch (err) {
             res.status(500).json({ message: err.message + 'Group Not Found' });
         }
