@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Group from './components/group';
-import Home from './components/home';
-import Task from './components/task';
-import User from './components/user';
-import Login from './components/login';
-import Register from './components/register';
+import Group from './components/Group';
+import Home from './components/Home';
+import Task from './components/Task';
+import User from './components/User';
+import Login from './components/Login';
+import Register from './components/Register';
 function App() {
-    // const [backendData, setBackendData] = useState(0);
-    // useEffect(() => {
-    //     fetch('/g')
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setBackendData(data);
-    //         });
-    // });
     <Routes>
         <Route
             path='/home'
             element={<Home />}
-        />
+        ></Route>
         <Route
             path='/login'
             element={<Login />}
-        />
+        ></Route>
         <Route
             path='/task'
             element={<Task />}
@@ -32,15 +23,15 @@ function App() {
         <Route
             path='/user'
             element={<User />}
-        />
+        ></Route>
         <Route
             path='/group'
             element={<Group />}
-        />
+        ></Route>
         <Route
             path='/register'
             element={<Register />}
-        />
+        ></Route>
     </Routes>;
     return <div>App</div>;
 }

@@ -8,6 +8,7 @@ const Task = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [isEditing, setIsEditing] = useState(false);
+    const [taskDate, setTaskDate] = useState(Date.now());
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -15,7 +16,7 @@ const Task = () => {
             try {
                 const token = localStorage.getItem('jwt');
                 const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-                const { data } = await axios.get(`/api/tasks?userId=${userId}`);
+                const { data } = await axios.get(`/tasks/${userId}`);
                 setTasks(data);
             } catch (error) {
                 console.error(error);
@@ -32,6 +33,7 @@ const Task = () => {
                     const { data } = await axios.get(`/task/${taskId}`);
                     setTitle(data.title);
                     setDescription(data.description);
+                    setTaskDate(data.taskDate);
                 } catch (error) {
                     console.error(error);
                 }
@@ -54,7 +56,7 @@ const Task = () => {
                 });
                 console.log('Task updated successfully!');
             } else {
-                await axios.post('/api/tasks', { title, description, userId });
+                await axios.post('/tasks', { title, description, userId });
                 console.log('Task created successfully!');
             }
         } catch (error) {

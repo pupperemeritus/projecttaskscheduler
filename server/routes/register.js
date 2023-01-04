@@ -4,7 +4,7 @@ const { createScanner } = require('typescript');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('./models/userModel');
+const User = require('../models/userModel');
 
 router.post('/', async (req, res) => {
     const user = req.body;
