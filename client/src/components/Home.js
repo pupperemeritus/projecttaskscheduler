@@ -32,7 +32,14 @@ const Home = () => {
                 bg='light'
                 expand='lg'
             >
-                <Navbar.Brand>Task Scheduler</Navbar.Brand>
+                <Navbar.Brand>
+                    <Link
+                        to='/home'
+                        className='navbar-brand'
+                    >
+                        Task Scheduler
+                    </Link>
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls='basic-navbar-nav' />
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='mr-auto'>

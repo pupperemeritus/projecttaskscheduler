@@ -25,4 +25,4 @@ const groupSchema = new mongoose.Schema({
 });
 // Schemas End
 
-module.export = mongoose.model('Group', groupSchema);
+module.exports = mongoose.model('Group', groupSchema);

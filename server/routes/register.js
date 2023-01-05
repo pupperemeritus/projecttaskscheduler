@@ -46,9 +46,9 @@ register.post('/', async (req, res) => {
         );
         try {
             newUser.save();
-            return res.json.status(200);
+            return res.status(200);
         } catch (err) {
-            return res.json.status(500).json({ message: err.message });
+            return res.status(500).json({ message: err.message });
         }
     }
 });

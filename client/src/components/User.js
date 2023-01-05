@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
+import { Form, Button } from 'react-bootstrap';
 const User = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -63,7 +64,7 @@ const User = () => {
         }
     };
     return (
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
             <label>
                 Name:
                 <input
@@ -72,7 +73,8 @@ const User = () => {
                     onChange={(event) => setName(event.target.value)}
                 />
             </label>
-        </form>
+            <Button onClick={handleDelete}>Delete</Button>
+        </Form>
     );
 };
 export default User;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
-import { Table, Form, Button } from 'react-bootstrap';
+import { Table, Form, Button, Nav, Navbar } from 'react-bootstrap';
 
 const Task = () => {
     const [tasks, setTasks] = useState([]);
@@ -11,6 +12,26 @@ const Task = () => {
     const [taskDate, setTaskDate] = useState(Date.now());
     const [error, setError] = useState(null);
 
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // Check if the user is authenticated when the component mounts
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                // Get the JWT from local storage
+                const token = localStorage.getItem('jwt');
+                // Verify the JWT and get the user's ID
+                const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+                // Send a request to the backend to check if the user exists
+                const { data } = await axios.get(`/user/${userId}`);
+                // Set isAuthenticated to true if the user exists
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        checkAuth();
+    }, []);
     useEffect(() => {
         const fetchTasks = async () => {
             try {
@@ -75,6 +96,49 @@ const Task = () => {
             console.log('Task not deleted');
         }
     };
+    return (
+        <div>
+            <Navbar
+                bg='light'
+                expand='lg'
+            >
+                <Navbar.Brand>
+                    <Link
+                        to='/home'
+                        className='navbar-brand'
+                    >
+                        Task Scheduler
+                    </Link>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls='basic-navbar-nav' />
+                <Navbar.Collapse id='basic-navbar-nav'>
+                    <Nav className='mr-auto'>
+                        {isAuthenticated && (
+                            <>
+                                <Link
+                                    to='/tasks'
+                                    className='nav-link'
+                                >
+                                    Tasks
+                                </Link>
+                                <Link
+                                    to='/profile'
+                                    className='nav-link'
+                                >
+                                    Profile
+                                </Link>
+                            </>
+                        )}
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+            <Table></Table>
+            <Form>
+                <Button onClick={handleSubmit}>Submit</Button>
+                <Button onClick={deleteTask}>Delete</Button>
+            </Form>
+        </div>
+    );
 };
 
 export default Task;
