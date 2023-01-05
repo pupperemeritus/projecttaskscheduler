@@ -2,21 +2,27 @@
 const { response } = require('express');
 const express = require('express');
 const { createScanner } = require('typescript');
-const router = express.Router();
+const group = express.Router();
 const Group = require('../models/groupModel');
 const verifyJWT = require('../models/verifyJWT');
 
 // Getting All Groups
-router.get('/', verifyJWT, async (req, res) => {
+group.get('/', verifyJWT, async (req, res) => {
+    console.log('received getting all groups');
     try {
-        const groups = await Group.find();
+        const groups = await Group.find()
+            .exec()
+            .then(() => {
+                res.status(201).json(groups);
+            });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
 // Getting One Group
-router.get('/:id', async (req, res) => {
+group.get('/:id', async (req, res) => {
+    console.log('received one group');
     try {
         const getGroup = await Group.findById({ _id: id });
         res.status(201).json(getGroup);
@@ -26,7 +32,8 @@ router.get('/:id', async (req, res) => {
 });
 
 // Creating One Group
-router.post('/', verifyJWT, async (req, res) => {
+group.post('/', verifyJWT, async (req, res) => {
+    console.log('received creating one group');
     const group = new group({
         groupName: req.body.groupName,
         groupCreationDate: Date.now(),
@@ -42,7 +49,8 @@ router.post('/', verifyJWT, async (req, res) => {
 });
 
 // Updating One Group
-router.patch('/:id', verifyJWT, async (req, res) => {
+group.patch('/:id', verifyJWT, async (req, res) => {
+    console.log('received updating one group');
     const updatedGroup = await Group.find()
         .where({ _id: id })
         .update({
@@ -51,7 +59,8 @@ router.patch('/:id', verifyJWT, async (req, res) => {
                 emails: req.body.emails.split(','),
                 groupModificationDate: Date.now(),
             },
-        });
+        })
+        .exec();
     try {
         const upd = await updatedGroup.save();
         res.status(201).json(upd);
@@ -61,13 +70,15 @@ router.patch('/:id', verifyJWT, async (req, res) => {
 });
 
 // Deleting One User
-router.delete('/:id', verifyJWT, async (req, res) => {
+group.delete('/:id', verifyJWT, async (req, res) => {
+    console.log('received deleting one group');
     try {
-        await Group.deleteOne({ _id: id });
-        res.status(200);
+        await Group.deleteOne({ _id: id })
+            .exec()
+            .then(() => res.status(201));
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 });
 
-module.exports = router;
+module.exports = group;

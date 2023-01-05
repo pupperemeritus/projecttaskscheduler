@@ -13,7 +13,7 @@ require('dotenv').config();
 // Express Initialization
 const app = express();
 // Express Initialization End
-
+port = 8000;
 // Middleware Initialization
 app.use(express.json());
 app.use('/group', groupRouter);
@@ -35,7 +35,9 @@ db.on('error', (error) => {
 });
 db.once('open', () => console.log('Connected'));
 // Mongoose Initialization End
-
+app.listen(port, () => {
+    console.log(`listening on port ${port}`);
+});
 // Requests
 app.get('/test', (req, res) => {
     res.json({ Hello: ['World'] });
