@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
-
+import useCheckAuthWrapper from './Home';
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isRegistered, setIsRegistered] = useState(false);
     const [error, setError] = useState(null);
-
+    checkAuthWrapper();
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -23,11 +23,61 @@ const Register = () => {
         }
     };
 
+    if (isAuthenticated) {
+        return <Navigate to='/' />;
+    }
+
     if (isRegistered) {
         return <Navigate to='/login' />;
     }
     return (
         <div>
+            <Navbar
+                bg='light'
+                expand='lg'
+            >
+                <Navbar.Brand>
+                    <Link
+                        to='/home'
+                        className='navbar-brand'
+                    >
+                        Task Scheduler
+                    </Link>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls='basic-navbar-nav' />
+                <Navbar.Collapse id='basic-navbar-nav'>
+                    <Nav className='mr-auto'>
+                        <Link
+                            to='/login'
+                            className='nav-link'
+                        >
+                            Login
+                        </Link>
+                        <Link
+                            to='/register'
+                            className='nav-link'
+                        >
+                            Register
+                        </Link>
+                        {isAuthenticated && (
+                            <>
+                                <Link
+                                    to='/tasks'
+                                    className='nav-link'
+                                >
+                                    Tasks
+                                </Link>
+                                <Link
+                                    to='/profile'
+                                    className='nav-link'
+                                >
+                                    Profile
+                                </Link>
+                            </>
+                        )}
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId='formBasicName'>
                     <Form.Label>Name</Form.Label>

@@ -3,32 +3,12 @@ import { Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { Form, Button, Nav, Navbar } from 'react-bootstrap';
-
 const Login = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    // Check if the user is authenticated when the component mounts
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                // Get the JWT from local storage
-                const token = localStorage.getItem('jwt');
-                // Verify the JWT and get the user's ID
-                const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-                // Send a request to the backend to check if the user exists
-                const { data } = await axios.get(`/user/${userId}`);
-                // Set isAuthenticated to true if the user exists
-                setIsAuthenticated(true);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        checkAuth();
-    }, []);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [error, setError] = useState(null);
+    checkAuthWrapper();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -41,14 +21,38 @@ const Login = () => {
             // Save the JWT to local storage
             localStorage.setItem('jwt', data.token);
             // Set isLoggedIn to true
-            setIsLoggedIn(true);
+            setIsAuthenticated(true);
         } catch (error) {
             // Set the error message
             setError(error.response.data.message);
         }
     };
-
-    if (isLoggedIn) {
+    const useCheckAuthWrapper = () => {
+        const [isAuthenticated, setIsAuthenticated] = useState(false);
+        // Check if the user is authenticated when the component mounts
+        useEffect(() => {
+            const checkAuth = async () => {
+                try {
+                    // Get the JWT from local storage
+                    const token = localStorage.getItem('jwt');
+                    // Verify the JWT and get the user's ID
+                    const { userId } = jwt.verify(
+                        token,
+                        process.env.JWT_SECRET
+                    );
+                    // Send a request to the backend to check if the user exists
+                    const { data } = await axios.get(`/user/${userId}`);
+                    // Set isAuthenticated to true if the user exists
+                    setIsAuthenticated(true);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+            checkAuth();
+            window.isAuthenticated = isAuthenticated;
+        }, []);
+    };
+    if (isAuthenticated) {
         return <Navigate to='/' />;
     }
 
@@ -81,7 +85,7 @@ const Login = () => {
                         >
                             Register
                         </Link>
-                        {isAuthenticated && (
+                        {window.isAuthenticated && (
                             <>
                                 <Link
                                     to='/tasks'
@@ -101,7 +105,7 @@ const Login = () => {
                 </Navbar.Collapse>
             </Navbar>
             <h1>Welcome to the Task Scheduler!</h1>
-            {!isAuthenticated && (
+            {!window.isAuthenticated && (
                 <p>Please login or register to start using the app.</p>
             )}
             <Form onSubmit={handleSubmit}>
