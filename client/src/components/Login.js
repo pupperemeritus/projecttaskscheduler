@@ -3,12 +3,14 @@ import { Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { Form, Button, Nav, Navbar } from 'react-bootstrap';
+import '../App.css';
 const Login = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        localStorage.getItem('isAuthenticated')
+    );
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    checkAuthWrapper();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -22,37 +24,18 @@ const Login = () => {
             localStorage.setItem('jwt', data.token);
             // Set isLoggedIn to true
             setIsAuthenticated(true);
+            localStorage.setItem('email', email);
+            localStorage.setItem('isAuthenticated', true);
         } catch (error) {
             // Set the error message
             setError(error.response.data.message);
         }
     };
-    const useCheckAuthWrapper = () => {
-        const [isAuthenticated, setIsAuthenticated] = useState(false);
-        // Check if the user is authenticated when the component mounts
-        useEffect(() => {
-            const checkAuth = async () => {
-                try {
-                    // Get the JWT from local storage
-                    const token = localStorage.getItem('jwt');
-                    // Verify the JWT and get the user's ID
-                    const { userId } = jwt.verify(
-                        token,
-                        process.env.JWT_SECRET
-                    );
-                    // Send a request to the backend to check if the user exists
-                    const { data } = await axios.get(`/user/${userId}`);
-                    // Set isAuthenticated to true if the user exists
-                    setIsAuthenticated(true);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-            checkAuth();
-            window.isAuthenticated = isAuthenticated;
-        }, []);
+    const logout = () => {
+        localStorage.clear();
+        window.location.reload();
     };
-    if (isAuthenticated) {
+    if (localStorage.getItem('isAuthenticated')) {
         return <Navigate to='/' />;
     }
 
@@ -85,27 +68,39 @@ const Login = () => {
                         >
                             Register
                         </Link>
-                        {window.isAuthenticated && (
+                        {isAuthenticated === true && (
                             <>
                                 <Link
-                                    to='/tasks'
+                                    to='/task'
                                     className='nav-link'
                                 >
                                     Tasks
                                 </Link>
                                 <Link
-                                    to='/profile'
+                                    to='/user'
                                     className='nav-link'
                                 >
                                     Profile
                                 </Link>
+                                <Link
+                                    to='/group'
+                                    className='nav-link'
+                                >
+                                    Group
+                                </Link>
+                                <Button
+                                    class='outline-danger'
+                                    onClick={logout}
+                                >
+                                    Logout
+                                </Button>
                             </>
                         )}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
             <h1>Welcome to the Task Scheduler!</h1>
-            {!window.isAuthenticated && (
+            {!(isAuthenticated === true) && (
                 <p>Please login or register to start using the app.</p>
             )}
             <Form onSubmit={handleSubmit}>

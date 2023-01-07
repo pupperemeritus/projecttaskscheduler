@@ -2,34 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
-import { Nav, Navbar } from 'react-bootstrap';
+import '../App.css';
+import { Nav, Navbar, Button } from 'react-bootstrap';
 const Home = () => {
-    const useCheckAuthWrapper = () => {
-        const [isAuthenticated, setIsAuthenticated] = useState(false);
-        // Check if the user is authenticated when the component mounts
-        useEffect(() => {
-            const checkAuth = async () => {
-                try {
-                    // Get the JWT from local storage
-                    const token = localStorage.getItem('jwt');
-                    // Verify the JWT and get the user's ID
-                    const { userId } = jwt.verify(
-                        token,
-                        process.env.JWT_SECRET
-                    );
-                    // Send a request to the backend to check if the user exists
-                    const { data } = await axios.get(`/user/${userId}`);
-                    // Set isAuthenticated to true if the user exists
-                    setIsAuthenticated(true);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-            checkAuth();
-            window.isAuthenticated = isAuthenticated;
-        }, []);
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        localStorage.getItem('isAuthenticated')
+    );
+    const logout = () => {
+        localStorage.clear();
+        window.location.reload();
     };
-    useCheckAuthWrapper();
     return (
         <div>
             <Navbar
@@ -59,27 +41,41 @@ const Home = () => {
                         >
                             Register
                         </Link>
-                        {window.isAuthenticated && (
+                        {localStorage.getItem('isAuthenticated') ? (
                             <>
                                 <Link
-                                    to='/tasks'
+                                    to='/task'
                                     className='nav-link'
                                 >
                                     Tasks
                                 </Link>
                                 <Link
-                                    to='/profile'
+                                    to='/user'
                                     className='nav-link'
                                 >
                                     Profile
                                 </Link>
+                                <Link
+                                    to='/group'
+                                    className='nav-link'
+                                >
+                                    Group
+                                </Link>
+                                <Button
+                                    variant='outline-danger'
+                                    onClick={logout}
+                                >
+                                    Logout
+                                </Button>
                             </>
+                        ) : (
+                            <p></p>
                         )}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
             <h1>Welcome to the Task Scheduler!</h1>
-            {!window.isAuthenticated && (
+            {!localStorage.getItem('isAuthenticated') && (
                 <p>Please login or register to start using the app.</p>
             )}
         </div>

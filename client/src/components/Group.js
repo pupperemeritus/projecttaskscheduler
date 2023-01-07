@@ -3,40 +3,19 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { Link } from 'react-router-dom';
 import { Form, Button, Nav, Navbar } from 'react-bootstrap';
-
+import '../App.css';
 const Group = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const useCheckAuthWrapper = () => {
-        const [isAuthenticated, setIsAuthenticated] = useState(false);
-        // Check if the user is authenticated when the component mounts
-        useEffect(() => {
-            const checkAuth = async () => {
-                try {
-                    // Get the JWT from local storage
-                    const token = localStorage.getItem('jwt');
-                    // Verify the JWT and get the user's ID
-                    const { userId } = jwt.verify(
-                        token,
-                        process.env.JWT_SECRET
-                    );
-                    // Send a request to the backend to check if the user exists
-                    const { data } = await axios.get(`/user/${userId}`);
-                    // Set isAuthenticated to true if the user exists
-                    setIsAuthenticated(true);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-            checkAuth();
-            window.isAuthenticated = isAuthenticated;
-        }, []);
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        localStorage.getItem('isAuthenticated')
+    );
+    const logout = () => {
+        localStorage.clear();
+        window.location.reload();
     };
-    useCheckAuthWrapper();
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -78,45 +57,73 @@ const Group = () => {
                 <Navbar.Toggle aria-controls='basic-navbar-nav' />
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='mr-auto'>
-                        {window.isAuthenticated && (
+                        <Link
+                            to='/login'
+                            className='nav-link'
+                        >
+                            Login
+                        </Link>
+                        <Link
+                            to='/register'
+                            className='nav-link'
+                        >
+                            Register
+                        </Link>
+                        {localStorage.getItem('isAuthenticated') && (
                             <>
                                 <Link
-                                    to='/tasks'
+                                    to='/task'
                                     className='nav-link'
                                 >
                                     Tasks
                                 </Link>
                                 <Link
-                                    to='/profile'
+                                    to='/user'
                                     className='nav-link'
                                 >
                                     Profile
                                 </Link>
+                                <Link
+                                    to='/group'
+                                    className='nav-link'
+                                >
+                                    Group
+                                </Link>
+                                <Button
+                                    variant='outline-danger'
+                                    onClick={logout}
+                                >
+                                    Logout
+                                </Button>
                             </>
                         )}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group controlId='formBasicName'>
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                        type='text'
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                    />
-                </Form.Group>
-                <Form.Group controlId='formBasicEmail'>
-                    <Form.Label>
-                        Emails(enter multiple emails separated by comma)
-                    </Form.Label>
-                    <Form.Control
-                        type='email'
-                        value={name}
-                        onChange={(event) => setEmail(event.target.value)}
-                    />
-                </Form.Group>
-            </Form>
+            {localStorage.getItem('isAuthenticated') ? (
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group controlId='formBasicName'>
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                            type='text'
+                            value={name}
+                            onChange={(event) => setName(event.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId='formBasicEmail'>
+                        <Form.Label>
+                            Emails(enter multiple emails separated by comma)
+                        </Form.Label>
+                        <Form.Control
+                            type='email'
+                            value={name}
+                            onChange={(event) => setEmail(event.target.value)}
+                        />
+                    </Form.Group>
+                </Form>
+            ) : (
+                <h1>Please login</h1>
+            )}
         </div>
     );
 };
