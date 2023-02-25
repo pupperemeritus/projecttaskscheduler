@@ -1,6 +1,5 @@
 const { response } = require('express');
 const express = require('express');
-const { createScanner } = require('typescript');
 const register = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
